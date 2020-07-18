@@ -14,22 +14,15 @@ export class SNode<T> {
  * 单链表，元素值初始位置为1
  */
 export class SinglyLinkedList<T> {
-    constructor() {
-        this.initList();
-    }
-
-    /**头节点 */
-    head: SNode<T>;
-    /**节点数 */
-    private count: number;
-
     /**
      * 初始化空链表
      */
-    initList() {
+    constructor() {
         this.head = new SNode<T>();
-        this.count = 0;
     }
+
+    /**头节点 */
+    private head: SNode<T>;
 
     /**
      * 尾插法初始化单链表，链表顺序与数组排序一致
@@ -46,7 +39,6 @@ export class SinglyLinkedList<T> {
             r.next = sNode;
             //r指向新的尾节点
             r = sNode;
-            this.count++;
         }
     }
 
@@ -63,7 +55,6 @@ export class SinglyLinkedList<T> {
             sNode.next = this.head.next;
             //head恒指向新插入的节点
             this.head.next = sNode;
-            this.count++;
         }
     }
 
@@ -78,7 +69,13 @@ export class SinglyLinkedList<T> {
      * 返回链表长度
      */
     listLength(): number {
-        return this.count;
+        let p = this.head.next;
+        let count = 0;
+        while (!!p) {
+            count++;
+            p = p.next;
+        }
+        return count;
     }
 
     /**
@@ -102,17 +99,17 @@ export class SinglyLinkedList<T> {
      * @param i 位置序号
      */
     getElem(i: number): T | boolean {
-        //超出链表长度返回false
-        if (i > this.count || i == 0) {
-            return false;
-        }
         let p = this.head;
         let j = 0;
-        while (j < i && !!p.next) {
+        while (j < i && !!p) {
             j++;
             p = p.next;
         }
-        return p.element;
+        if (!p) {
+            return false;
+        } else {
+            return p.element;
+        }
     }
 
     /**
@@ -152,7 +149,6 @@ export class SinglyLinkedList<T> {
             //节点插入到p之后
             sNode.next = p.next;
             p.next = sNode;
-            this.count++;
             return true;
         }
     }
@@ -162,10 +158,6 @@ export class SinglyLinkedList<T> {
      * @param i
      */
     listDelete(i: number): boolean | SNode<T> {
-        //超出链表长度返回false
-        if (i > this.count || i == 0) {
-            return false;
-        }
         let p = this.head.next;
         let j = 1;
         while (j < i - 1 && !!p) {
@@ -175,9 +167,17 @@ export class SinglyLinkedList<T> {
         if (!!p) {
             const q = p.next;
             p.next = q.next;
-            this.count--;
             return q;
+        } else {
+            return false;
         }
+    }
+
+    /**
+     * 返回链表头节点
+     */
+    getHead(): SNode<T> {
+        return this.head;
     }
 }
 
@@ -192,9 +192,9 @@ function destroyProp(prop: any) {
 //test code
 // const slist = new SinglyLinkedList();
 // console.log("slist", slist);
-// console.log("slistconfig", slist.dispList());
+// console.log("slistconfig", slist.listLength());
 // const data = [1, 2, 3, 4];
 // slist.initListAtTail(data);
 // console.log("slist", JSON.stringify(slist));
-// console.log("initListAtTail", slist.dispList());
-// console.log("initListAtTailconfig", slist.listDelete(3));
+// console.log("initListAtTail", slist.listDelete(3));
+// console.log("initListAtTailconfig", slist.listLength());
