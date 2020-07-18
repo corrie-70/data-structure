@@ -185,10 +185,10 @@ function destroyProp(prop: any) {
 }
 
 //test code
-const slist = new SinglyLinkedList();
+// const slist = new SinglyLinkedList();
 // console.log("slist", slist);
 // console.log("slistconfig", slist.dispList());
-const data = [1, 2, 3, 4];
-slist.initListAtTail(data);
-console.log("initListAtTail", JSON.stringify(slist));
-console.log("initListAtTailconfig", slist.listDelete(3));
+// const data = [1, 2, 3, 4];
+// slist.initListAtTail(data);
+// console.log("initListAtTail", JSON.stringify(slist));
+// console.log("initListAtTailconfig", slist.listDelete(3));
