@@ -84,12 +84,17 @@ export class SinglyLinkedList<T> {
     /**
      * 输出链表元素
      */
-    dispList() {
+    dispList(): string {
+        if (!this.head.next) {
+            return '';
+        }
         let p = this.head.next;
+        let str = '';
         while (!!p) {
-            console.log(p.element);
+            str = `${str},${p.element}`;
             p = p.next;
         }
+        return str.substring(1);
     }
 
     /**
@@ -190,5 +195,6 @@ function destroyProp(prop: any) {
 // console.log("slistconfig", slist.dispList());
 // const data = [1, 2, 3, 4];
 // slist.initListAtTail(data);
-// console.log("initListAtTail", JSON.stringify(slist));
+// console.log("slist", JSON.stringify(slist));
+// console.log("initListAtTail", slist.dispList());
 // console.log("initListAtTailconfig", slist.listDelete(3));
