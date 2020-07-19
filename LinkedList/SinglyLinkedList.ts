@@ -32,7 +32,6 @@ export class SinglyLinkedList<T> {
         let sNode: SNode<T>;
         //指向链表尾节点
         let r = this.head;
-        if (data.length === 0) return;
         for (let i = 0; i < data.length; i++) {
             sNode = new SNode(data[i]);
             //利用对象浅拷贝，修改当前尾节点的next值
@@ -48,7 +47,6 @@ export class SinglyLinkedList<T> {
      */
     initListAtHead(data: Array<T>) {
         let sNode: SNode<T>;
-        if (data.length === 0) return;
         for (let i = 0; i < data.length; i++) {
             sNode = new SNode(data[i]);
             //新插入的节点接管head的指向
