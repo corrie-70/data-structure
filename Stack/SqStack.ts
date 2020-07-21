@@ -27,7 +27,7 @@ export class SqStack<T> {
 
     /**进栈 */
     push(ele: T): boolean {
-        if (!this.maxSize || (!!this.maxSize && this.top == this.maxSize - 1)) {
+        if (!!this.maxSize && this.top == this.maxSize - 1) {
             return false;
         }
         this.top++;
@@ -53,6 +53,25 @@ export class SqStack<T> {
     }
 }
 
+//使用顺序栈判断字符串是否为对称字符串
+//算法思想：字符出栈顺序与原字符串顺序一致
+/**对称字符串判断 */
+function symmetry(str: string): boolean {
+    let stack = new SqStack();
+    for (let i = 0; i < str.length; i++) {
+        stack.push(str[i]);
+    }
+    for (let i = 0; i < str.length; i++) {
+        let ele = stack.pop();
+        if (ele != str[i]) {
+            return false;
+        }
+    }
+    stack.destroyStack()
+    return true;
+}
+
+
 //test code
 // let stack = new SqStack(5);
 // console.log('stackEmpty', stack.stackEmpty());
@@ -64,3 +83,4 @@ export class SqStack<T> {
 // console.log('pop', stack.pop());
 // console.log('getTop', stack.getTop());
 // console.log('stackEmpty', stack.stackEmpty());
+// console.log(symmetry('strts'));
