@@ -62,23 +62,37 @@ export class LiStack<T>{
 //判断表达式里的括号是否匹配
 //算法思想：左括号入栈，右括号退一个栈里的元素
 //匹配右括号时，栈里元素为空，返回false，否则返回true
+/**符号匹配算法 */
 function match(exp: string): boolean {
-    let match = false;
-    let lStack = new LiStack();
+    let match = true;
+    let lStack = new LiStack<string>();
+    for (let i = 0; i < exp.length; i++) {
+        if (exp[i] == '(') {
+            lStack.push(exp[i]);
+        } else if (exp[i] == ')') {
+            if (lStack.getTop()) {
+                lStack.pop();
+            } else {
+                match = false;
+                break;
+            }
+        }
+    }
     return match;
 }
 
 //test code
-let stack = new LiStack();
-console.log('stackEmpty', stack.stackEmpty());
-const data = [1, 2, 3, 4, 5, 6]
-for (let i = 0; i < data.length; i++) {
-    stack.push(data[i]);
-}
-console.log('stack', stack);
-console.log('pop', stack.pop());
-console.log('getTop', stack.getTop());
-console.log('stackEmpty', stack.stackEmpty());
-stack.destroyStack()
-console.log('destroyStack', stack);
+// let stack = new LiStack();
+// console.log('stackEmpty', stack.stackEmpty());
+// const data = [1, 2, 3, 4, 5, 6]
+const data = "(())"
+// for (let i = 0; i < data.length; i++) {
+//     stack.push(data[i]);
+// }
+// console.log('stack', stack);
+// console.log('pop', stack.pop());
+// console.log('getTop', stack.getTop());
+// console.log('stackEmpty', stack.stackEmpty());
+// stack.destroyStack()
+console.log('destroyStack', match(data));
 // console.log(symmetry('strts'));
