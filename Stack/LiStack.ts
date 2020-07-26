@@ -68,15 +68,21 @@ function match(exp: string): boolean {
     let lStack = new LiStack<string>();
     for (let i = 0; i < exp.length; i++) {
         if (exp[i] == '(') {
+            //左括号入栈
             lStack.push(exp[i]);
         } else if (exp[i] == ')') {
             if (lStack.getTop()) {
+                //当栈内元素不为空时，出栈
                 lStack.pop();
             } else {
                 match = false;
                 break;
             }
         }
+    }
+    //循环结束后，栈内元素不为空
+    if (!lStack.stackEmpty()) {
+        match = false;
     }
     return match;
 }
@@ -85,7 +91,7 @@ function match(exp: string): boolean {
 // let stack = new LiStack();
 // console.log('stackEmpty', stack.stackEmpty());
 // const data = [1, 2, 3, 4, 5, 6]
-const data = "(())"
+const data = "((a+b))"
 // for (let i = 0; i < data.length; i++) {
 //     stack.push(data[i]);
 // }
