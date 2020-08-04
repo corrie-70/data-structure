@@ -1,11 +1,11 @@
 //顺序队列实现
 /**元素值对象类型 */
 export interface ElementType<T> {
-    [id: number]: T
+    [id: number]: T;
 }
 
 /**顺序存储结构的队列实现 */
-export class SqQueue<T>{
+export class SqQueue<T> {
     /**队首指针 */
     private front: number;
     /**队尾指针 */
@@ -35,7 +35,7 @@ export class SqQueue<T>{
 
     /**判断队列是否为空 */
     queueEmpty(): boolean {
-        return this.front == this.rear
+        return this.front == this.rear;
     }
 
     /**进队列 */
@@ -64,16 +64,17 @@ export class SqQueue<T>{
 
 //环形队列
 //判断队满、队空、进队、出队的算法变了，其余同上
+//删除元素后，再进队，由于队满条件牺牲了一个元素的控件，所有实际存储最大是maxSize-1
 
 /**环形队列实现 */
-export class CirQueue<T>{
+export class CirQueue<T> {
     /**队首指针 */
     private front: number;
     /**队尾指针 */
     private rear: number;
     /**最大长度 */
     private maxSize: number | undefined;
-    /**元素数组 */
+    /**元素对象 */
     private data: ElementType<T>;
 
     /**初始化空队列 */
@@ -102,7 +103,7 @@ export class CirQueue<T>{
     /**进队列 */
     enQueue(ele: T): boolean {
         //队满
-        if (((this.rear + 1) % this.maxSize) == this.front) {
+        if ((this.rear + 1) % this.maxSize == this.front) {
             return false;
         }
         this.rear = (this.rear + 1) % this.maxSize;
@@ -118,24 +119,25 @@ export class CirQueue<T>{
         }
         this.front = (this.front + 1) % this.maxSize;
         const ele = this.data[this.front];
-        delete this.data[this.front]
+        delete this.data[this.front];
         return ele;
     }
 }
 
 //环形队列
 //用队列中元素个数替代尾指针
+//实际存储最大个数是maxSize，与CirQueue区别
 
 /**环形队列（元素个数实现） */
-export class CircleCountQueue<T>{
+export class CircleCountQueue<T> {
     /**队首指针 */
     private front: number;
     /**队列元素个数 */
     private count: number;
     /**最大长度 */
     private maxSize: number | undefined;
-    /**元素数组 */
-    private data: T[] = [];
+    /**元素对象 */
+    private data: ElementType<T>;
 
     /**初始化空队列 */
     constructor(maxSize?: number) {
@@ -147,7 +149,7 @@ export class CircleCountQueue<T>{
         this.front = -1;
         this.count = 0;
         this.maxSize = maxSize;
-        this.data = [];
+        this.data = {};
     }
 
     /**销毁队列 */
@@ -162,20 +164,35 @@ export class CircleCountQueue<T>{
 
     /**进队列 */
     enQueue(ele: T): boolean {
+        let rear: number;
         //队满
         if (this.count == this.maxSize) {
             return false;
         }
         this.count++;
-        this.data.push(ele);
+        rear = (this.front + this.count) % this.maxSize;
+        this.data[rear] = ele;
         return true;
+    }
+
+    /**出队列 */
+    deQueue(): T | boolean {
+        //队列为空
+        if (this.count == 0) {
+            return false;
+        }
+        this.front = (this.front + 1) % this.maxSize;
+        const ele = this.data[this.front];
+        delete this.data[this.front];
+        this.count--;
+        return ele;
     }
 }
 
 //test code
-let queue = new SqQueue<number>(5);
-console.log('queueEmpty', queue.queueEmpty());
-const data = [1, 2, 3, 4, 5]
+// let queue = new SqQueue<number>(5);
+// console.log("queueEmpty", queue.queueEmpty());
+const data = [1, 2, 3, 4, 5];
 // for (let i = 0; i < data.length; i++) {
 //     queue.enQueue(data[i]);
 // }
@@ -185,13 +202,25 @@ const data = [1, 2, 3, 4, 5]
 // console.log(queue.enQueue(1)); //即使已经出队一个元素，还是不能再入队新的元素
 // console.log('queueEmpty', queue.queueEmpty());
 
-// let cQueue = new CirQueue<number>(5);
-// for (let i = 0; i < data.length; i++) {
-//     cQueue.enQueue(data[i]);
-// }
+let cQueue = new CirQueue<number>(5);
+for (let i = 0; i < data.length; i++) {
+    cQueue.enQueue(data[i]);
+}
 // console.log('cQueue', cQueue);
 // console.log('deQueue', cQueue.deQueue(), cQueue.deQueue());
 // console.log('cQueue', cQueue);
 // console.log('cQueue', cQueue.enQueue(6))
 // console.log('cQueue', cQueue.enQueue(7))
 // console.log('cQueue', cQueue);
+
+let circleCountQueue = new CircleCountQueue<number>(5);
+for (let i = 0; i < data.length; i++) {
+    circleCountQueue.enQueue(data[i]);
+}
+console.log('circleCountQueue', circleCountQueue);
+console.log('deQueue', circleCountQueue.deQueue(), circleCountQueue.deQueue());
+console.log('circleCountQueue', circleCountQueue);
+console.log('circleCountQueue', circleCountQueue.enQueue(6))
+console.log('circleCountQueue', circleCountQueue.enQueue(7))
+console.log('circleCountQueue', circleCountQueue.enQueue(8))
+console.log('circleCountQueue', circleCountQueue);
