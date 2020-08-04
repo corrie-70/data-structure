@@ -192,7 +192,7 @@ export class CircleCountQueue<T> {
 //test code
 // let queue = new SqQueue<number>(5);
 // console.log("queueEmpty", queue.queueEmpty());
-const data = [1, 2, 3, 4, 5];
+// const data = [1, 2, 3, 4, 5];
 // for (let i = 0; i < data.length; i++) {
 //     queue.enQueue(data[i]);
 // }
@@ -202,10 +202,10 @@ const data = [1, 2, 3, 4, 5];
 // console.log(queue.enQueue(1)); //即使已经出队一个元素，还是不能再入队新的元素
 // console.log('queueEmpty', queue.queueEmpty());
 
-let cQueue = new CirQueue<number>(5);
-for (let i = 0; i < data.length; i++) {
-    cQueue.enQueue(data[i]);
-}
+// let cQueue = new CirQueue<number>(5);
+// for (let i = 0; i < data.length; i++) {
+//     cQueue.enQueue(data[i]);
+// }
 // console.log('cQueue', cQueue);
 // console.log('deQueue', cQueue.deQueue(), cQueue.deQueue());
 // console.log('cQueue', cQueue);
@@ -213,14 +213,14 @@ for (let i = 0; i < data.length; i++) {
 // console.log('cQueue', cQueue.enQueue(7))
 // console.log('cQueue', cQueue);
 
-let circleCountQueue = new CircleCountQueue<number>(5);
-for (let i = 0; i < data.length; i++) {
-    circleCountQueue.enQueue(data[i]);
-}
-console.log('circleCountQueue', circleCountQueue);
-console.log('deQueue', circleCountQueue.deQueue(), circleCountQueue.deQueue());
-console.log('circleCountQueue', circleCountQueue);
-console.log('circleCountQueue', circleCountQueue.enQueue(6))
-console.log('circleCountQueue', circleCountQueue.enQueue(7))
-console.log('circleCountQueue', circleCountQueue.enQueue(8))
-console.log('circleCountQueue', circleCountQueue);
+// let circleCountQueue = new CircleCountQueue<number>(5);
+// for (let i = 0; i < data.length; i++) {
+//     circleCountQueue.enQueue(data[i]);
+// }
+// console.log('circleCountQueue', circleCountQueue);
+// console.log('deQueue', circleCountQueue.deQueue(), circleCountQueue.deQueue());
+// console.log('circleCountQueue', circleCountQueue);
+// console.log('circleCountQueue', circleCountQueue.enQueue(6))
+// console.log('circleCountQueue', circleCountQueue.enQueue(7))
+// console.log('circleCountQueue', circleCountQueue.enQueue(8))
+// console.log('circleCountQueue', circleCountQueue);
