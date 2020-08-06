@@ -51,6 +51,11 @@ export class SqStack<T> {
         }
         return this.data[this.top];
     }
+
+    /**获取内容数组 */
+    getData(): T[] {
+        return this.data;
+    }
 }
 
 //使用顺序栈判断字符串是否为对称字符串
@@ -67,10 +72,118 @@ function symmetry(str: string): boolean {
             return false;
         }
     }
-    stack.destroyStack()
+    stack.destroyStack();
     return true;
 }
 
+/**
+ * 迷宫节点类
+ */
+class MazeNode {
+    constructor(i: number, j: number, di: number) {
+        this.i = i;
+        this.j = j;
+        this.di = di;
+    }
+    /**横坐标 */
+    i: number;
+    /**纵坐标 */
+    j: number;
+    /**方向状态，东西南北对应0,1,2,3，初始值为-1 */
+    di: number;
+}
+
+let maze = [
+    [1, 1, 1, 1, 1],
+    [0, 1, 0, 1, 1],
+    [0, 1, 1, 0, 1],
+    [0, 1, 0, 1, 0],
+    [0, 1, 1, 1, 1],
+];
+
+//顺序栈求解迷宫问题简单路径
+//算法思想：采用深度遍历思想，顺时针寻找节点四周可以走的点，进栈，将节点的方向值保存在di中
+//再顺时针遍历新进栈节点四周，如果节点四周都不能走，节点出栈，根据保存的节点di值探寻下一个方向
+/**
+ * 获得迷宫路径
+ * @param maze 迷宫数组
+ * @param inPointi 入口横坐标
+ * @param inPointj 入口纵坐标
+ * @param outPointi 出口横坐标
+ * @param outPointj 出口横坐标
+ */
+function getMazePath(
+    maze: number[][],
+    inPointi: number,
+    inPointj: number,
+    outPointi: number,
+    outPointj: number
+): boolean | MazeNode[] {
+    let stack = new SqStack<MazeNode>(),
+        di: number,
+        i: number,
+        j: number,
+        //标记节点在迷宫图里是否为可走状态，0不可走，1可走
+        isBanned = 0;
+    let inPoint = new MazeNode(inPointi, inPointj, -1);
+    stack.push(inPoint);
+    maze[inPointi][inPointj] = -1;
+
+    while (!stack.stackEmpty()) {
+        let topNode = stack.getTop() as MazeNode;
+        i = topNode.i;
+        j = topNode.j;
+        di = topNode.di;
+        if (i == outPointi && j == outPointj) {
+            return stack.getData();
+        }
+        isBanned = 0;
+        //在(i,j)四周寻找可以走的节点
+        while (di < 4 && isBanned == 0) {
+            di++;
+            switch (di) {
+                case 0:
+                    i = topNode.i - 1;
+                    j = topNode.j;
+                    break;
+                case 1:
+                    i = topNode.i;
+                    j = topNode.j + 1;
+                    break;
+                case 2:
+                    i = topNode.i + 1;
+                    j = topNode.j;
+                    break;
+                case 3:
+                    i = topNode.i;
+                    j = topNode.j - 1;
+                    break;
+            }
+            if (
+                i < 0 ||
+                i > maze.length - 1 ||
+                j < 0 ||
+                j > maze[0].length - 1
+            ) {
+                continue;
+            }
+            isBanned = maze[i][j];
+        }
+
+        if (isBanned == 1) {
+            topNode.di = di;
+            let newNode = new MazeNode(i, j, -1);
+            stack.push(newNode);
+            maze[i][j] = 0;
+        } else {
+            maze[topNode.i][topNode.j] = 0;
+            stack.pop();
+        }
+    }
+    return false;
+}
+
+console.log(getMazePath(maze, 0, 0, 4, 4));
 
 //test code
 // let stack = new SqStack(5);
