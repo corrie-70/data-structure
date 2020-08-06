@@ -1,4 +1,7 @@
 //顺序队列实现
+
+import { maze } from "../Stack/SqStack";
+
 /**元素值对象类型 */
 export interface ElementType<T> {
     [id: number]: T;
@@ -41,7 +44,7 @@ export class SqQueue<T> {
     /**进队列 */
     enQueue(ele: T): boolean {
         //尾指针等于最大长度减一时，队列满
-        if (this.rear == this.maxSize - 1) {
+        if (!!this.maxSize && this.rear == this.maxSize - 1) {
             return false;
         }
         this.rear++;
@@ -59,6 +62,16 @@ export class SqQueue<T> {
         const ele = this.data[this.front];
         delete this.data[this.front];
         return ele;
+    }
+
+    /** 获得队首指针*/
+    getFront() {
+        return this.front;
+    }
+
+    /** 获得队尾指针*/
+    getRear() {
+        return this.rear;
     }
 }
 
@@ -188,6 +201,78 @@ export class CircleCountQueue<T> {
         return ele;
     }
 }
+
+class QNode {
+    constructor(i: number, j: number, pre: number) {
+        this.i = i;
+        this.j = j;
+        this.pre = pre;
+    }
+    i: number;
+    j: number;
+    pre: number;
+}
+
+function getMazePath(
+    maze: number[][],
+    inPointi: number,
+    inPointj: number,
+    outPointi: number,
+    outPointj: number): boolean {
+    let queue = new SqQueue<QNode>(), i: number, j: number, di: number, isBanned: number;
+    let inPoint = new QNode(inPointi, inPointj, -1);
+    queue.enQueue(inPoint);
+    maze[inPointi][inPointj] = -1;
+
+    while (!queue.queueEmpty()) {
+        let frontNode = queue.deQueue() as QNode;
+        console.log('frontNode', frontNode);
+        i = frontNode.i;
+        j = frontNode.j;
+        if (i == outPointi && j == outPointj) {
+            console.log(queue);
+            return true;
+        }
+        for (di = 0; di < 4; di++) {
+            switch (di) {
+                case 0:
+                    i = frontNode.i - 1;
+                    j = frontNode.j;
+                    break;
+                case 1:
+                    i = frontNode.i;
+                    j = frontNode.j + 1;
+                    break;
+                case 2:
+                    i = frontNode.i + 1;
+                    j = frontNode.j;
+                    break;
+                case 3:
+                    i = frontNode.i;
+                    j = frontNode.j - 1;
+                    break;
+            }
+
+            if (
+                i < 0 ||
+                i > maze.length - 1 ||
+                j < 0 ||
+                j > maze[0].length - 1
+            ) {
+                continue;
+            }
+
+            if (maze[i][j] == 1) {
+                let newNode = new QNode(i, j, queue.getFront());
+                queue.enQueue(newNode);
+                maze[i][j] = 0;
+            }
+        }
+    }
+    return false;
+}
+
+console.log(getMazePath(maze, 0, 0, 4, 4));
 
 //test code
 // let queue = new SqQueue<number>(5);
