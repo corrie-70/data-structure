@@ -1,7 +1,5 @@
 //顺序队列实现
 
-import { maze } from "../Stack/SqStack";
-
 /**元素值对象类型 */
 export interface ElementType<T> {
     [id: number]: T;
@@ -202,36 +200,73 @@ export class CircleCountQueue<T> {
     }
 }
 
+let maze = [
+    [1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 0, 0, 1, 1],
+    [1, 0, 0, 0, 1, 1, 1, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1],
+    [1, 0, 0, 0, 1, 0, 0, 1],
+    [0, 1, 1, 1, 1, 1, 1, 1],
+];
+
+/**迷宫节点类 */
 class QNode {
     constructor(i: number, j: number, pre: number) {
         this.i = i;
         this.j = j;
         this.pre = pre;
     }
+    /**横坐标 */
     i: number;
+    /**纵坐标 */
     j: number;
+    /**父节点索引 */
     pre: number;
 }
 
+//顺序队列求解迷宫路径
+//算法思想：采用广度优先遍历思想，节点出队列时，遍历其四周值为1的点，加入队列中，并且记录父节点的位置
+//父节点的索引值通过队列的front指针获取，用于结果溯源
+//记录出队的所有节点，节点索引即出队列时的front值
+//根据出口的pre值，溯源到索引相等的点，直到找到入口坐标
+/**
+ * 获得迷宫路径
+ * @param maze 迷宫数组
+ * @param inPointi 入口横坐标
+ * @param inPointj 入口纵坐标
+ * @param outPointi 出口横坐标
+ * @param outPointj 出口横坐标
+ */
 function getMazePath(
     maze: number[][],
     inPointi: number,
     inPointj: number,
     outPointi: number,
-    outPointj: number): boolean {
-    let queue = new SqQueue<QNode>(), i: number, j: number, di: number, isBanned: number;
+    outPointj: number
+): boolean | QNode[] {
+    let queue = new SqQueue<QNode>(),
+        i: number,
+        j: number,
+        di: number;
+
     let inPoint = new QNode(inPointi, inPointj, -1);
     queue.enQueue(inPoint);
     maze[inPointi][inPointj] = -1;
+    let res: QNode[] = [];
 
     while (!queue.queueEmpty()) {
         let frontNode = queue.deQueue() as QNode;
-        console.log('frontNode', frontNode);
         i = frontNode.i;
         j = frontNode.j;
+
+        //如果不使用SqQueue类，重新定义一个简单的顺序队列
+        //删除时只移动front指针，就不需要新变量保存删除节点
+        res.push(frontNode);
+
         if (i == outPointi && j == outPointj) {
-            console.log(queue);
-            return true;
+            return tracePath(res);
         }
         for (di = 0; di < 4; di++) {
             switch (di) {
@@ -263,6 +298,7 @@ function getMazePath(
             }
 
             if (maze[i][j] == 1) {
+                //关键   新节点的pre值为删除节点的索引值，用于反向溯源路径
                 let newNode = new QNode(i, j, queue.getFront());
                 queue.enQueue(newNode);
                 maze[i][j] = 0;
@@ -272,7 +308,21 @@ function getMazePath(
     return false;
 }
 
-console.log(getMazePath(maze, 0, 0, 4, 4));
+/**
+ * 返回迷宫路径
+ * @param path 出队的节点数组
+ */
+function tracePath(path: QNode[]): QNode[] {
+    let i = path.length - 1;
+    let result: QNode[] = [];
+    while (i > -1) {
+        result.push(path[i]);
+        i = path[i].pre;
+    }
+    return result.reverse();
+}
+
+console.log(getMazePath(maze, 0, 0, 7, 7));
 
 //test code
 // let queue = new SqQueue<number>(5);
