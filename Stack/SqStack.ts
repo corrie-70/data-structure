@@ -94,11 +94,14 @@ class MazeNode {
 }
 
 let maze = [
-    [1, 1, 1, 1, 1],
-    [0, 1, 0, 1, 1],
-    [0, 1, 1, 0, 1],
-    [0, 1, 0, 1, 0],
-    [0, 1, 1, 1, 1],
+    [1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 1, 0, 1, 1, 1, 0, 1],
+    [1, 1, 1, 1, 0, 0, 1, 1],
+    [1, 0, 0, 0, 1, 1, 1, 1],
+    [1, 1, 1, 0, 1, 1, 1, 1],
+    [1, 0, 1, 1, 1, 0, 1, 1],
+    [1, 0, 0, 0, 1, 0, 0, 1],
+    [0, 1, 1, 1, 1, 1, 1, 1],
 ];
 
 //顺序栈求解迷宫问题简单路径
@@ -134,11 +137,12 @@ function getMazePath(
         i = topNode.i;
         j = topNode.j;
         di = topNode.di;
+
         if (i == outPointi && j == outPointj) {
             return stack.getData();
         }
         isBanned = 0;
-        //在(i,j)四周寻找可以走的节点
+        //在(i,j)四周寻找isBanned=1的节点
         while (di < 4 && isBanned == 0) {
             di++;
             switch (di) {
@@ -167,7 +171,8 @@ function getMazePath(
             ) {
                 continue;
             }
-            isBanned = maze[i][j];
+            //过滤maze[i][j]为-1的情况
+            isBanned = maze[i][j] == 1 ? 1 : 0;
         }
 
         if (isBanned == 1) {
@@ -176,14 +181,15 @@ function getMazePath(
             stack.push(newNode);
             maze[i][j] = 0;
         } else {
-            maze[topNode.i][topNode.j] = 0;
+            //退栈的元素还原其迷宫值
+            maze[topNode.i][topNode.j] = 1;
             stack.pop();
         }
     }
     return false;
 }
 
-console.log(getMazePath(maze, 0, 0, 4, 4));
+console.log(getMazePath(maze, 0, 0, 7, 7));
 
 //test code
 // let stack = new SqStack(5);
