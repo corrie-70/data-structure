@@ -52,23 +52,35 @@ function repl(str: SinglyLinkedList<string>) {
 //Brute-Force算法，简称BF算法，简单匹配算法
 //遍历目标串s，逐一比较字符是否与模板串t相等
 //如果不相等，s的遍历值加1，否则，返回t在s中的位置
-
+/**
+ * 简单匹配算法
+ * @param s 目标串
+ * @param t 模板串
+ */
 function bruteForce(s: string, t: string): boolean | number {
-    let num = 1;
-    for (let i = 0; i < s.length; i++) {
+    //记录相同字符个数
+    let num: number, i: number;
+    for (i = 0; i < s.length; i++) {
+        //相同字符长度等于t长度，说明匹配完成，不再循环
+        if (num == t.length) {
+            break;
+        } else {
+            num = 0;
+        }
         for (let j = 0; j < t.length; j++) {
-            console.log("2");
+            //字符相同，继续循环j，并记录num
+            //不相同则退出本循环，执行i+1
             if (t[j] == s[i + j]) {
                 num++;
             } else {
                 break;
             }
         }
-        if (num == t.length) {
-            return num;
-        } else {
-            return false;
-        }
+    }
+    if (num == t.length) {
+        return i - 1;
+    } else {
+        return false;
     }
 }
 //test code
@@ -77,4 +89,4 @@ function bruteForce(s: string, t: string): boolean | number {
 // slist.initListAtTail(["d", "f", "b", "a", "b", "c"]);
 // repl(slist);
 // console.log(JSON.stringify(slist));
-console.log(bruteForce("abc", "bc"));
+console.log(bruteForce("asdcdbc", "bc"));
