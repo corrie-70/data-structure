@@ -83,10 +83,54 @@ function bruteForce(s: string, t: string): boolean | number {
         return false;
     }
 }
+
+//KMP算法
+//解决BF算法内主串指针回溯问题
+//算法思想：计算next数组保存前面与开头字符相同的字符个数
+
+/**
+ * 获取next数组
+ * @param str 
+ */
+function getNext(str: string): number[] {
+    let result: number[] = [], k = -1;
+    result.push(k);
+    for (let i = 0; i < str.length; i++) {
+        if (k == -1 || str[i] === str[0]) {
+            k++;
+            result.push(k);
+        } else {
+            k = result[k];
+        }
+    }
+    return result
+}
+
+/**
+ * KMP计算
+ * @param s 目标串
+ * @param t 匹配串
+ */
+function KMPIndex(s: string, t: string) {
+    let next = getNext(t), i = 0, j = 0;
+    while (i < s.length && j < t.length) {
+        if (j == -1 || s[i] == t[j]) {
+            i++; j++;
+        } else {
+            j = next[j]
+        }
+    }
+    if (j == t.length) {
+        return i - t.length
+    } else {
+        return -1;
+    }
+}
 //test code
 // console.log(strcmp("abc", "abc"));
 // const slist = new SinglyLinkedList<string>();
 // slist.initListAtTail(["d", "f", "b", "a", "b", "c"]);
 // repl(slist);
 // console.log(JSON.stringify(slist));
-console.log(bruteForce("asdcdbc", "bc"));
+// console.log(bruteForce("asdcdbc", "bc"));
+console.log(KMPIndex('aaab', 'ab'))
