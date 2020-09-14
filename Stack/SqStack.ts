@@ -189,7 +189,7 @@ function getMazePath(
     return false;
 }
 
-console.log(getMazePath(maze, 0, 0, 7, 7));
+// console.log(getMazePath(maze, 0, 0, 7, 7));
 
 //test code
 // let stack = new SqStack(5);
