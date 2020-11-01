@@ -11,13 +11,13 @@ export class BinaryTree {
         this.createBTNode(str);
     }
 
-    private head: BTNode | null = null;
+    private root: BTNode | null = null;
 
     /**
      * 销毁二叉树
      */
     destroyBT() {
-        this.head = null;
+        this.root = null;
     }
 
     /**
@@ -26,15 +26,15 @@ export class BinaryTree {
      */
     findNode(ele: string): BTNode | null {
         let p: BTNode;
-        if (this.head === null) {
+        if (this.root === null) {
             return null;
         }
-        if (this.head.data === ele) {
-            return this.head;
+        if (this.root.data === ele) {
+            return this.root;
         }
         // 深度优先遍历，定义栈存储待查找变量
         let stack = new SqStack<BTNode>();
-        stack.push(this.head);
+        stack.push(this.root);
         while (!stack.stackEmpty()) {
             const sTop = stack.getTop() as BTNode;
             if (sTop.data === ele) {
@@ -55,15 +55,15 @@ export class BinaryTree {
      * 返回二叉树高度
      */
     getBTNodeDepth(): number {
-        return this.getNodeDepth(this.head);
+        return this.getNodeDepth(this.root);
     }
 
     /**
      * 返回二叉树括号表示法字符串
      */
     dispBTNode(): string {
-        if (this.head) {
-            return this.getBTNode(this.head);
+        if (this.root) {
+            return this.getBTNode(this.root);
         }
         return null;
     }
@@ -113,7 +113,7 @@ export class BinaryTree {
                     break;
             }
         });
-        this.head = res;
+        this.root = res;
     }
 
     /**
