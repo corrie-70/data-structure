@@ -87,6 +87,35 @@ function match(exp: string): boolean {
     return match;
 }
 
+// 将十进制数num转换为2~36进制，由num指定
+/**
+ * 进制转换
+ * @param num 
+ * @param base 
+ */
+function baseConverter(num: number, base: number) {
+    if (base < 2 || base > 36) {
+        return false;
+    }
+
+    let stack = new LiStack<number>();
+    const digits = '0123456789ABCDFEGHIJKLMNOPQRSTUVWXYZ';
+    let decNum = num;
+
+    // 算法核心，循环取余，余数入栈，原数除以基数后，循环直到除尽
+    while (decNum > 0) {
+        const mod = decNum % base;
+        stack.push(mod);
+        decNum = Math.floor(decNum / base);
+    }
+
+    let res = '';
+    while (!stack.stackEmpty()) {
+        res = `${res}${digits[stack.pop() as number]}`
+    }
+    return `${num}的${base}进制是：${res}`;
+}
+
 //test code
 // let stack = new LiStack();
 // console.log('stackEmpty', stack.stackEmpty());
@@ -100,5 +129,6 @@ const data = "((a+b))"
 // console.log('getTop', stack.getTop());
 // console.log('stackEmpty', stack.stackEmpty());
 // stack.destroyStack()
-console.log('destroyStack', match(data));
+// console.log('destroyStack', match(data));
 // console.log(symmetry('strts'));
+console.log(baseConverter(100, 2))
