@@ -1,6 +1,5 @@
 import { SinglyLinkedList, SNode } from "./SinglyLinkedList";
 
-
 //删除单链表中元素值最大的节点，假设最大值节点唯一
 //算法思想，删除节点只需将前一个节点的next指向修改
 //所以，定义两个变量保存指向删除的节点及其前一个节点即可只遍历一次
@@ -10,7 +9,10 @@ import { SinglyLinkedList, SNode } from "./SinglyLinkedList";
  * @param list 单链表
  */
 function delMaxNode<T>(list: SinglyLinkedList<T>) {
-    let p = list.getHead().next, pre = list.getHead(), maxpre = pre, max = p;
+    let p = list.getHead().next,
+        pre = list.getHead(),
+        maxpre = pre,
+        max = p;
     while (!!p) {
         if (max.element < p.element) {
             max = p;
@@ -29,11 +31,13 @@ function delMaxNode<T>(list: SinglyLinkedList<T>) {
 
 /**
  * 链表递增有序排列
- * @param list 
+ * @param list
  */
 function sort<T>(list: SinglyLinkedList<T>) {
     //p指针保存保存从第二个数据节点开始的所有数据（包含第二个数据节点）
-    let p = list.getHead().next.next, q: SNode<T>, pre: SNode<T>;
+    let p = list.getHead().next.next,
+        q: SNode<T>,
+        pre: SNode<T>;
     //list只保留一个数据节点，通过遍历比较大小后，再插入数据节点
     list.getHead().next.next = null;
     while (!!p) {
@@ -61,10 +65,11 @@ function sort<T>(list: SinglyLinkedList<T>) {
 
 /**
  * 逆置单链表
- * @param list 
+ * @param list
  */
 function reverse<T>(list: SinglyLinkedList<T>) {
-    let p = list.getHead().next, q: SNode<T>;
+    let p = list.getHead().next,
+        q: SNode<T>;
     list.getHead().next = null;
     while (!!p) {
         //临时变量保存p的后继节点
@@ -82,13 +87,15 @@ function reverse<T>(list: SinglyLinkedList<T>) {
 
 /**
  * 拆分单链表
- * @param list 
+ * @param list
  */
 function split<T>(list: SinglyLinkedList<T>): SinglyLinkedList<T> {
-    let p = list.getHead().next, q: SNode<T>;
+    let p = list.getHead().next,
+        q: SNode<T>;
     list.getHead().next = null;
-    let l1 = list, r = l1.getHead(), l2 = new SinglyLinkedList<T>()
-    console.log(p)
+    let l1 = list,
+        r = l1.getHead(),
+        l2 = new SinglyLinkedList<T>();
     while (!!p) {
         //尾插法建立L1
         r.next = p;
@@ -108,6 +115,49 @@ function split<T>(list: SinglyLinkedList<T>): SinglyLinkedList<T> {
     return l2;
 }
 
+// 求链表中间节点
+/**
+ * 遍历两次链表，第一次获取长度，第二次取中间值，时间复杂度O(n)
+ * @param arr
+ */
+function getMidLink<T>(arr: T[]): SNode<T> {
+    let list = new SinglyLinkedList<T>(),
+        length = 0,
+        num = 0;
+    list.initListAtTail(arr);
+
+    let p = list.getHead().next;
+
+    while (!!p) {
+        length++;
+        p = p.next;
+    }
+    length = length % 2 === 0 ? length / 2 + 1 : Math.ceil(length / 2);
+    p = list.getHead();
+    while (num !== length) {
+        p = p.next;
+        num++;
+    }
+    return p;
+}
+
+// 快慢指针实现
+// 慢指针依次遍历每个节点，快指针一次跳过一个元素（每次走两步）
+// 快指针走到尽头时，慢指针正好在链表中间
+function getMidLinkByPointer<T>(arr: T[]): SNode<T> {
+    let list = new SinglyLinkedList<T>();
+    list.initListAtTail(arr);
+    let fastPointer = list.getHead();
+    let slowPointer = list.getHead();
+
+    while (!!fastPointer) {
+        fastPointer = fastPointer.next ? fastPointer.next.next : null;
+        slowPointer = slowPointer.next;
+    }
+
+    return slowPointer;
+}
+
 //test code
 // const slist = new SinglyLinkedList();
 
@@ -116,3 +166,4 @@ function split<T>(list: SinglyLinkedList<T>): SinglyLinkedList<T> {
 // console.log('lll', JSON.stringify(split(slist)))
 // console.log("slist", JSON.stringify(slist));
 // console.log("slistconfig", slist.dispList());
+console.log("getMidLink", getMidLinkByPointer([1, 2, 3, 4, 5]));
