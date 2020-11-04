@@ -26,27 +26,23 @@ export class BinarySearchTree<T> {
      * @param key
      */
     searchkey(key: T): BSTNode<T> | boolean {
-        if (!this.root) {
-            return false;
-        }
-
         return this.searchkeyNode(this.root, key);
     }
 
     /**
      * 中序遍历
      */
-    inOrderTraverse() {}
+    inOrderTraverse() { }
 
-    preOrderTraverse() {}
+    preOrderTraverse() { }
 
-    postOrderTraverse() {}
+    postOrderTraverse() { }
 
-    min() {}
+    min() { }
 
-    max() {}
+    max() { }
 
-    remove() {}
+    remove() { }
 
     /**
      * 递归插入节点
@@ -75,25 +71,16 @@ export class BinarySearchTree<T> {
      * @param key 匹配值
      */
     private searchkeyNode(node: BSTNode<T>, key: T): BSTNode<T> | boolean {
-        let res: BSTNode<T> | boolean;
-        if (!node) {
-            res = false;
-            return res;
+        if (node == null) {
+            return false;
         }
         if (key < node.key) {
-            if (!node.lNode) {
-                res = false;
-            }
-            res = this.searchkeyNode(node.lNode, key);
+            return this.searchkeyNode(node.lNode, key);
         } else if (key > node.key) {
-            if (!node.rNode) {
-                res = false;
-            }
-            res = this.searchkeyNode(node.rNode, key);
+            return this.searchkeyNode(node.rNode, key);
         } else {
-            res = node;
+            return node;
         }
-        return res;
     }
 }
 
@@ -118,4 +105,4 @@ tree.insert(40);
 tree.insert(45);
 tree.insert(53);
 console.log(JSON.stringify(tree));
-console.log(tree.searchkey(52));
+console.log(tree.searchkey(53));
