@@ -14,11 +14,7 @@ export class BinarySearchTree<T> {
      * @param key
      */
     insert(key: T) {
-        if (this.root == null) {
-            this.root = new BSTNode(key);
-        } else {
-            this.insertNode(this.root, key);
-        }
+        this.root = this.insertNode(this.root, key);
     }
 
     /**
@@ -32,17 +28,44 @@ export class BinarySearchTree<T> {
     /**
      * 中序遍历
      */
-    inOrderTraverse() { }
+    inOrderTraverse(callback: Function) {
+        this.inOrderTraverseNode(this.root, callback);
+    }
 
-    preOrderTraverse() { }
+    /**
+     * 先序遍历
+     */
+    preOrderTraverse(callback: Function) {
+        this.preOrderTraverseNode(this.root, callback);
+    }
 
-    postOrderTraverse() { }
+    /**
+     * 后序遍历
+     */
+    postOrderTraverse(callback: Function) {
+        this.postOrderTraverseNode(this.root, callback);
+    }
 
-    min() { }
+    /**
+     * 最小值节点
+     */
+    min(): T | null {
+        return this.root == null ? null : this.minNode(this.root);
+    }
 
-    max() { }
+    /**
+     * 最大值节点
+     */
+    max(): T | null {
+        return this.root == null ? null : this.maxNode(this.root);
+    }
 
-    remove() { }
+    /**
+     * 节点移除
+     */
+    remove(item: T) {
+        this.root = this.removeNode(this.root, item);
+    }
 
     /**
      * 递归插入节点
@@ -50,19 +73,15 @@ export class BinarySearchTree<T> {
      * @param key 待插入的节点值
      */
     private insertNode(node: BSTNode<T>, key: T) {
-        if (Number(node.key) < Number(key)) {
-            if (node.rNode == null) {
-                node.rNode = new BSTNode(key);
-            } else {
-                this.insertNode(node.rNode, key);
-            }
-        } else {
-            if (node.lNode == null) {
-                node.lNode = new BSTNode(key);
-            } else {
-                this.insertNode(node.lNode, key);
-            }
+        if (node == null) {
+            return new BSTNode(key);
         }
+        if (Number(node.key) < Number(key)) {
+            node.rNode = this.insertNode(node.rNode, key);
+        } else {
+            node.lNode = this.insertNode(node.lNode, key);
+        }
+        return node;
     }
 
     /**
@@ -82,6 +101,103 @@ export class BinarySearchTree<T> {
             return node;
         }
     }
+
+    /**
+     * 递归中序遍历
+     * @param node
+     * @param callback
+     */
+    private inOrderTraverseNode(node: BSTNode<T> | null, callback: Function) {
+        if (node == null) {
+            return;
+        }
+        this.inOrderTraverseNode(node.lNode, callback);
+        callback(node);
+        this.inOrderTraverseNode(node.rNode, callback);
+    }
+
+    /**
+     * 递归先序遍历
+     */
+    private preOrderTraverseNode(node: BSTNode<T> | null, callback: Function) {
+        if (node == null) {
+            return;
+        }
+        callback(node);
+        this.preOrderTraverseNode(node.lNode, callback);
+        this.preOrderTraverseNode(node.rNode, callback);
+    }
+
+    /**
+     * 递归后序遍历
+     */
+    private postOrderTraverseNode(node: BSTNode<T> | null, callback: Function) {
+        if (node == null) {
+            return;
+        }
+        this.postOrderTraverseNode(node.lNode, callback);
+        this.postOrderTraverseNode(node.rNode, callback);
+        callback(node);
+    }
+
+    /**
+     * 递归最小节点
+     * @param node
+     */
+    private minNode(node: BSTNode<T>): T {
+        if (node.lNode == null) {
+            return node.key;
+        }
+        return this.minNode(node.lNode);
+    }
+
+    /**
+     * 递归最大节点
+     */
+    private maxNode(node: BSTNode<T>): T {
+        if (node.lNode == null) {
+            return node.key;
+        }
+        return this.maxNode(node.rNode);
+    }
+
+    /**
+     * 递归删除节点
+     * @param node
+     * @param item
+     */
+    private removeNode(node: BSTNode<T> | null, item: T): BSTNode<T> | null {
+        if (node == null) {
+            return null;
+        }
+        if (node.key < item) {
+            node.rNode = this.removeNode(node.rNode, item);
+            return node;
+        } else if (node.key > item) {
+            node.lNode = this.removeNode(node.lNode, item);
+            return node;
+        }
+
+        // 节点值匹配时
+        if (node.lNode == null && node.rNode == null) {
+            // {1} 待删除节点为叶子节点
+            node = null;
+            return node;
+        } else if (node.lNode == null) {
+            // {2} 待删除节点只有右节点
+            node = node.rNode;
+            return node;
+        } else if (node.rNode == null) {
+            // {3} 待删除节点只有右节点
+            node = node.lNode;
+            return node;
+        } else {
+            // {4} 待删除节点既有左节点，又有右节点
+            node.key = this.minNode(node.rNode);
+            node.rNode = this.removeNode(node.rNode, node.key);
+            return node;
+        }
+    }
 }
 
 /**
@@ -96,13 +212,27 @@ export class BSTNode<T> {
     rNode: BSTNode<T> | null;
 }
 
+// type Node<T> = BSTNode<T> | null;
+
 const tree = new BinarySearchTree<number>();
-tree.insert(12);
-tree.insert(24);
+tree.insert(30);
+tree.insert(25);
+tree.insert(36);
+tree.insert(20);
 tree.insert(28);
-tree.insert(37);
+tree.insert(32);
 tree.insert(40);
-tree.insert(45);
-tree.insert(53);
 console.log(JSON.stringify(tree));
-console.log(tree.searchkey(53));
+// console.log(tree.searchkey(53));
+// tree.inOrderTraverse((node) => {
+//     console.log(node.key);
+// });
+// tree.preOrderTraverse((node) => {
+//     console.log(node.key);
+// });
+// tree.postOrderTraverse((node) => {
+//     console.log(node.key);
+// });
+// console.log(tree.max());
+tree.remove(30);
+console.log(JSON.stringify(tree));
